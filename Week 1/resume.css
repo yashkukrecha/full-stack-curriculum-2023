@@ -1,0 +1,43 @@
+* {
+    font-family: Calibri;
+}
+
+.subheading {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 0%;
+}
+
+.location {
+    font-weight: bold;
+}
+
+.position {
+    font-style: italic;
+}
+
+.information {
+    text-align: center;
+}
+
+.education, .experience {
+    text-align: left;
+}
+
+.years {
+    float: right;
+}
+
+h1 {
+    text-decoration: underline;
+    text-align: center;
+    margin: 0%;
+}
+
+img {
+    position: absolute;
+    bottom: 5%;
+    left: 5%;
+    max-width: 30%;
+    max-height: 30%;
+}
