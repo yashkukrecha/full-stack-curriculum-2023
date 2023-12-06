@@ -10,6 +10,19 @@
 <body>
 	<div id='main-container'>
 		<div id='weather-container'>
+			<div id="current-container">
+				<h2 id="date"></h3>
+				<h1 id="city"></h1>
+				<div id="current-weather">
+					<div id="conditions">
+						<h2 id="weather-code"></h2>
+						<h2 id="current-temp"></h2>
+						<h4 id="aqi"></h4>
+					</div>
+					<img id="icon">
+				</div>
+			</div>
+			<div id="future-container"></div>
 		</div> 
 	</div>
 	<div id='side-container'>
@@ -23,12 +36,13 @@
 
 <script>
 		// USE YOUR OWN API KEY
-		const apiKey = "";
+		const apiKey = "edeb07750fa8aa3873fec2b01f33084b";
 
         // variable that stores the city that is chosen
 		let city;
         // variable that stores the weather and forecast for the city
 		let weather;
+		let futureWeatherStats;
         // the variable that stores the air quality index for the city
 		let aqi;
 
@@ -102,6 +116,91 @@
 			//printing the city object to the console
 			console.log(city);
             // BEGIN CODING HERE
+			currentWeather();
+			futureWeather();
 		}
+
+		function currentWeather() {
+			let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&units=imperial&appid=${apiKey}`
+			fetch (apiCall)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+				weather = data;
+				loadWeather();
+			})
+		}
+
+		function loadWeather() {
+			document.querySelector("#date").innerText = formatDate();
+			document.querySelector("#city").innerText = "Weather for " + city.fullName;
+			document.querySelector("#weather-code").innerText = weather.weather[0].description;
+			document.querySelector("#current-temp").innerText = Math.round(weather.main.temp) +  "°";
+			// modifies the image
+			document.querySelector("#icon").src = `icons/${weather.weather[0].icon}.svg`;
+			document.querySelector("#icon").alt = "weather-icon";
+			// gets the AQI
+			getAQI();
+		}
+
+		function getAQI() {
+			let apiCall = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}`;
+			fetch (apiCall)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+				aqi = data;
+				loadAQI();
+			})
+		}
+
+		function loadAQI() {
+			document.querySelector("#aqi").innerText = "AQI: " + aqi.list[0].main.aqi;
+		}
+
+		function futureWeather() {
+			let apiCall = `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&units=imperial&appid=${apiKey}`
+			fetch (apiCall)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+				futureWeatherStats = data;
+				loadFutureWeather();
+			})
+		}
+
+		function loadFutureWeather() {
+			const fiveDays = document.querySelector("#future-container");
+			for (let i = 1; i <= 5; i++) {
+				// create card for each day
+				const card = document.createElement("div");
+				card.className = "card";
+
+				// date
+				const date = document.createElement("h3");
+				date.className = "future-date";
+				date.innerText = formatDate(i);
+
+				// icon
+				const icon = document.createElement("img");
+				icon.className = "future-icon";
+				icon.src = `icons/${futureWeatherStats.list[i * 8 - 2].weather[0].icon}.svg`;
+				icon.alt = "future-weather-icon";
+
+				// weather
+				const temp = document.createElement("h2");
+				temp.className = "future-temp";
+				temp.innerText = Math.round(futureWeatherStats.list[i * 8 - 2].main.temp_max) + "° to " + 
+								Math.round(futureWeatherStats.list[i * 8 - 2].main.temp_min) + "°";
+
+				// add all of them
+				card.appendChild(date);
+				card.appendChild(icon);
+				card.appendChild(temp);
+
+				fiveDays.appendChild(card);
+			}
+		}
+
 	</script>
 </html>
