@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../styles/MainContainer.css"; // Import the CSS file for MainContainer
 
+import Card from './Card';
+
 function MainContainer(props) {
 
   function formatDate(daysFromNow = 0) {
@@ -29,6 +31,9 @@ function MainContainer(props) {
   null or an empty object.
   */
   
+  const [weather, setWeather] = useState(null);
+  const [futureWeather, setFutureWeather] = useState(null);
+  const [aqi, setAQI] = useState(null);
   
   /*
   STEP 3: Fetch Weather Data When City Changes.
@@ -43,7 +48,29 @@ function MainContainer(props) {
   After fetching the data, use the 'setWeather' function from the 'useState' hook to set the weather data 
   in your state.
   */
+  const apiKey = props.apiKey;
   
+  useEffect(() => {
+    if (props.city) {
+      // get current weather
+      let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${props.city.lat}&lon=${props.city.lon}&units=imperial&appid=${apiKey}`
+			fetch (apiCall)
+			.then((response) => response.json())
+			.then((data) => setWeather(data))
+      
+      // get future weather
+      apiCall = `https://api.openweathermap.org/data/2.5/forecast?lat=${props.city.lat}&lon=${props.city.lon}&units=imperial&appid=${apiKey}`
+			fetch (apiCall)
+			.then((response) => response.json())
+			.then((data) => setFutureWeather(data))
+      
+      // get aqi
+      apiCall = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${props.city.lat}&lon=${props.city.lon}&appid=${apiKey}`
+			fetch (apiCall)
+			.then((response) => response.json())
+			.then((data) => setFutureWeather(data.list[0].main))
+    }
+  }, [props.city])
   
   return (
     <div id="main-container">
@@ -59,6 +86,32 @@ function MainContainer(props) {
         This is a good section to play around with React components! Create your own - a good example could be a WeatherCard
         component that takes in props, and displays data for each day of the week.
         */}
+
+        {weather && (
+          <div id="current-container">
+            <h2 id="date"> {formatDate()} </h2>
+				    <h1 id="city"> {props.city.fullName} </h1>
+            <div id="current-weather">
+              <div id="conditions">
+                <h2 id="weather-code"> {weather.weather[0].description} </h2>
+                <h2 id="current-temp"> {Math.round(weather.main.temp) + "°"} </h2>
+                {aqi && (<h4 id="aqi"> {"AQI: " + aqi.list[0].main.aqi} </h4>)}
+              </div>
+              <img id="icon" src={require(`../icons/${weather.weather[0].icon}.svg`)} alt="weather-icon"></img>
+				    </div>
+          </div>
+        )}
+        
+        {futureWeather && Array.isArray(futureWeather.list) && (
+          <div id="future-container">
+            <Card date={formatDate(1)} future={futureWeather.list[0]}></Card>
+            <Card date={formatDate(2)} future={futureWeather.list[8]}></Card>
+            <Card date={formatDate(3)} future={futureWeather.list[16]}></Card>
+            <Card date={formatDate(4)} future={futureWeather.list[24]}></Card>
+            <Card date={formatDate(5)} future={futureWeather.list[32]}></Card>
+          </div>
+        )}
+
       </div>
     </div>
   );

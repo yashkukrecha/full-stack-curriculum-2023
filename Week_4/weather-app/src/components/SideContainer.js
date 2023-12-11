@@ -20,7 +20,7 @@ function SideContainer(props) {
           renderSearchResults(data);
         });
     }
-  }
+  } 
 
   function renderSearchResults(searchResults) {
     // selects the unordered list element search-results-list
@@ -96,6 +96,7 @@ function SideContainer(props) {
       lon: lon,
     };
     console.log(city);
+    props.updateCity(city)
   }
 
   return (

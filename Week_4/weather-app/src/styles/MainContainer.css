@@ -14,3 +14,29 @@
   height: 60%;
   width: 90%;
 }
+
+#current-weather {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#current-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#current-temp {
+  font-size: 80px;
+}
+
+#icon {
+  height: 30%;
+  width: 30%;
+}
+
+#future-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}

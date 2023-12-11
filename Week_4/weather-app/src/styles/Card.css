@@ -1,0 +1,22 @@
+.card {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1%;
+    border-radius: 5px;
+    padding: 3%;
+    border: 1px solid #0075ff;
+    background-color: white;
+    font-size: 65%;
+}
+  
+.future-temp {
+    font-size: 200%;
+}
+
+.future-icon {
+    width: 85%;
+    height: 75%;
+}
