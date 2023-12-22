@@ -90,7 +90,7 @@ function LoginPage() {
           </Button>
         </Box>
         {/* TODO: Display Login Error if it exists */}
-        {loginError & (<Alert severity="error"> {loginError} </Alert>)}
+        {loginError && (<Alert severity="error"> {loginError} </Alert>)}
       </Box>
     </Container>
   );

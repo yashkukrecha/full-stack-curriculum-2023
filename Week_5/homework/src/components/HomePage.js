@@ -93,10 +93,13 @@ export default function HomePage() {
           "Content-Type": "application/json",
           "accept": "application/json",
         }})
+        .then(response => {
+          console.log("deleted");
+          const unfinished = tasks.filter(task => !task.finished);
+          setTasks(unfinished);
+        })
       }
     })
-    const unfinished = tasks.filter(task => !task.finished);
-    setTasks(unfinished);
   }
 
 
