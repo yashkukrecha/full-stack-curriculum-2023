@@ -43,12 +43,47 @@ app.get("/tasks", async (req, res) => {
 
 // GET: Endpoint to retrieve all tasks for a user
 // ... 
+app.get("/tasks/:user", async (req, res) => {
+  try {
+    const snapshot = await db.collection("tasks").where("user", "==", req.params.user).get();
+    let tasks = [];
+    snapshot.forEach((doc) => { tasks.push({ id: doc.id, ...doc.data() }) });
+    res.status(200).send(tasks);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
 
 // POST: Endpoint to add a new task
 // ...
+app.post("/tasks", async (req, res) => {
+  try {
+    const data = {
+      'user': req.body.user,
+      'task': req.body.task,
+      'finished': req.body.finished
+    }
+    const addedTask = await db.collection("tasks").add(data);
+    res.status(201).send({
+      id: addedTask.id,  // Automatically generated Document ID from Firestore
+      ...data,
+    });
+
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
 
 // DELETE: Endpoint to remove a task
 // ...
+app.delete("/tasks/:id", async (req, res) => {
+  try {
+    await db.collection("tasks").doc(req.params.id).delete();
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
 
 // Setting the port for the server to listen on
 const PORT = process.env.PORT || 3001;
