@@ -171,7 +171,7 @@
 
 		function loadFutureWeather() {
 			const fiveDays = document.querySelector("#future-container");
-			for (let i = 1; i <= 5; i++) {
+			for (let i = 0; i < 5; i++) {
 				// create card for each day
 				const card = document.createElement("div");
 				card.className = "card";
@@ -184,14 +184,14 @@
 				// icon
 				const icon = document.createElement("img");
 				icon.className = "future-icon";
-				icon.src = `icons/${futureWeatherStats.list[i * 8 - 2].weather[0].icon}.svg`;
+				icon.src = `icons/${futureWeatherStats.list[i * 8].weather[0].icon}.svg`;
 				icon.alt = "future-weather-icon";
 
 				// weather
 				const temp = document.createElement("h2");
 				temp.className = "future-temp";
-				temp.innerText = Math.round(futureWeatherStats.list[i * 8 - 2].main.temp_max) + "° to " + 
-								Math.round(futureWeatherStats.list[i * 8 - 2].main.temp_min) + "°";
+				temp.innerText = Math.round(futureWeatherStats.list[i * 8].main.temp_max) + "° to " + 
+								Math.round(futureWeatherStats.list[i * 8].main.temp_min) + "°";
 
 				// add all of them
 				card.appendChild(date);
